@@ -165,9 +165,9 @@ main{min-height:100vh}
 .sight-kicker{display:block;margin-bottom:10px;color:var(--mut);font-size:10px;font-weight:700;line-height:1.3;text-transform:uppercase;letter-spacing:.14em}
 .sight-card h3{margin:0 0 7px;color:var(--inkg);font-size:26px;font-weight:460;line-height:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sight-card p{margin:0;color:#4a553f;font-size:13.5px;font-weight:400;line-height:1.3;display:-webkit-box;max-height:2.7em;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2}
-.sights-controls{position:absolute;z-index:12;left:48px;right:auto;top:calc(var(--sights-top) + 310px + 30px);display:flex;justify-content:flex-start;gap:14px;
-  opacity:var(--sights-controls-opacity);pointer-events:none;will-change:opacity}
-.sights-controls.is-ready{pointer-events:auto}
+.sights-controls{position:absolute;z-index:12;left:48px;right:auto;top:calc(var(--sights-top) + 378px);display:flex;justify-content:flex-start;gap:14px;
+  opacity:1;visibility:var(--sights-visibility);pointer-events:auto}
+.sights-controls .rbtn{box-shadow:0 6px 24px rgba(5,10,8,.35)}
 .scroll-cue{position:absolute;z-index:9;left:50%;bottom:16px;transform:translateX(-50%);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:rgba(246,241,228,.6);animation:cue 2.4s ease infinite}
 @keyframes cue{0%,100%{opacity:.45;transform:translate(-50%,0)}50%{opacity:1;transform:translate(-50%,6px)}}
 
@@ -186,8 +186,8 @@ main{min-height:100vh}
   .hero-tags .pill{min-height:38px;padding:0 16px;font-size:.88rem}
   .facts{gap:22px;margin-top:38px}
   .sight-card{flex-basis:min(82vw,340px)}
-  .sights-head{padding:0 22px 0 22px;padding-right:120px}
-  .sights-controls{left:auto;right:22px;top:calc(var(--sights-top) - 10px);gap:10px}
+  .sights-head{padding:0 22px}
+  .sights-controls{left:22px;top:calc(var(--sights-top) + 392px)}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -760,14 +760,19 @@ function setupSightSlider(){
   SL.cards=[...track.children];
   SL.active=SL.originalCount;
   track.addEventListener('transitionend',normalizeSightSlider);
-  let swX=null,swY=null;
-  track.addEventListener('touchstart',e=>{swX=e.touches[0].clientX;swY=e.touches[0].clientY;},{passive:true});
-  track.addEventListener('touchend',e=>{
+  let swX=null,swY=null,swMoved=false;
+  track.addEventListener('pointerdown',e=>{swX=e.clientX;swY=e.clientY;swMoved=false;},{passive:true});
+  track.addEventListener('pointermove',e=>{if(swX!=null&&Math.abs(e.clientX-swX)>12)swMoved=true;},{passive:true});
+  const swEnd=e=>{
     if(swX==null)return;
-    const dx=e.changedTouches[0].clientX-swX,dy=e.changedTouches[0].clientY-swY;
+    const dx=e.clientX-swX,dy=e.clientY-swY;
     if(Math.abs(dx)>42&&Math.abs(dx)>Math.abs(dy)*1.2)moveSightSlider(dx<0?1:-1);
     swX=null;
-  },{passive:true});
+  };
+  track.addEventListener('pointerup',swEnd,{passive:true});
+  track.addEventListener('pointercancel',()=>{swX=null;},{passive:true});
+  track.addEventListener('click',e=>{if(swMoved){e.stopPropagation();e.preventDefault();swMoved=false;}},true);
+  track.style.touchAction='pan-y';
   updateSightSlider();
 }
 function updateSightSlider(){
