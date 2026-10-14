@@ -186,8 +186,8 @@ main{min-height:100vh}
   .hero-tags .pill{min-height:38px;padding:0 16px;font-size:.88rem}
   .facts{gap:22px;margin-top:38px}
   .sight-card{flex-basis:min(82vw,340px)}
-  .sights-head{padding:0 22px}
-  .sights-controls{left:22px}
+  .sights-head{padding:0 22px 0 22px;padding-right:120px}
+  .sights-controls{left:auto;right:22px;top:calc(var(--sights-top) - 10px);gap:10px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -760,6 +760,14 @@ function setupSightSlider(){
   SL.cards=[...track.children];
   SL.active=SL.originalCount;
   track.addEventListener('transitionend',normalizeSightSlider);
+  let swX=null,swY=null;
+  track.addEventListener('touchstart',e=>{swX=e.touches[0].clientX;swY=e.touches[0].clientY;},{passive:true});
+  track.addEventListener('touchend',e=>{
+    if(swX==null)return;
+    const dx=e.changedTouches[0].clientX-swX,dy=e.changedTouches[0].clientY-swY;
+    if(Math.abs(dx)>42&&Math.abs(dx)>Math.abs(dy)*1.2)moveSightSlider(dx<0?1:-1);
+    swX=null;
+  },{passive:true});
   updateSightSlider();
 }
 function updateSightSlider(){
