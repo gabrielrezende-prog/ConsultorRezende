@@ -789,7 +789,7 @@ function priceLine(p){
 }
 function homeView(){
   /* prazo primeiro: pronto e 2026 na frente, depois 2027, depois 2028 em diante */
-  const drank=p=>{if(p.statusCat==='Pronto')return 0;if(p.statusCat==='Fase final')return 1;const m=p.delivery.match(/20\d{2}/);return m?(+m[0]-2024):90;};
+  const drank=p=>{if(p.statusCat==='Pronto')return 0;if(p.statusCat==='Fase final')return 1;const m=(p.delivery||'').match(/20\d{2}/);if(m)return +m[0]-2024;return p.statusCat==='Em obras'?3:6;};
   const ordered=[...D.projects].sort((a,b)=>drank(a)-drank(b));
   const list=ordered.filter(eligible);
   const nTotal=D.projects.length;
