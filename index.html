@@ -2,7 +2,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Seleção privada de residências de alto padrão em São Paulo."/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Marcellus&family=Space+Grotesk:wght@400;500&family=Lora:ital,wght@1,400..600&family=DM+Serif+Display:ital@0;1&family=Italiana&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Prata&family=Gilda+Display&family=Unbounded:wght@300;400&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Marcellus&family=Space+Grotesk:wght@400;500&family=Lora:ital,wght@1,400..600&family=DM+Serif+Display:ital@0;1&family=Italiana&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Prata&family=Cinzel:wght@400;500&family=Gilda+Display&family=Unbounded:wght@300;400&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400..600&display=swap">
 <style>
 /* ============================================================
    CURADORIA REZENDE · verde profundo + cream, moldura, serifa
@@ -566,7 +566,7 @@ document.getElementById('waFoot').href=waLink('Olá Rezende, cheguei pelo seu po
 /* uma fonte display por empreendimento, linguagem única */
 const FONTS={taj:"'Marcellus',serif",core:"'Space Grotesk',sans-serif",ipes:"'Lora',serif",
   moema:"'DM Serif Display',serif",ile:"'Italiana',serif",lejardin:"'Cormorant Garamond',serif",
-  peninsula:"'Prata',serif",nuv:"'Fraunces',serif",rose:"'Gilda Display',serif",
+  peninsula:"'Prata',serif",mirant:"'Cinzel',serif",nuv:"'Fraunces',serif",rose:"'Gilda Display',serif",
   onthesky:"'Unbounded',sans-serif",palaceoasis:"'Bodoni Moda',serif"};
 const devFont=id=>FONTS[id]||"var(--disp)";
 
@@ -802,7 +802,7 @@ function priceLine(p){
 }
 function homeView(){
   /* prazo primeiro: pronto e 2026 na frente, depois 2027, depois 2028 em diante */
-  const drank=p=>{if(p.statusCat==='Pronto')return 0;if(p.statusCat==='Fase final')return 1;const m=(p.delivery||'').match(/20\d{2}/);if(m)return +m[0]-2024;return p.statusCat==='Em obras'?3:6;};
+  const drank=p=>{if(p.featured)return -100+p.featured;if(p.statusCat==='Pronto')return 0;if(p.statusCat==='Fase final')return 1;const m=(p.delivery||'').match(/20\d{2}/);if(m)return +m[0]-2024;return p.statusCat==='Em obras'?3:6;};
   const ordered=[...D.projects].sort((a,b)=>drank(a)-drank(b));
   const list=ordered.filter(eligible);
   const nTotal=D.projects.length;
